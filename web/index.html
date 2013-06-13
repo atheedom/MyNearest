@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	
+	<link rel="stylesheet" type="text/css" href="style/myNearest.css"/>
+	<link type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet'  />
+	
+	<script type="text/javascript" src="js/mainmap.js"></script>
+	<script type="text/javascript" src="js/navigation.js"></script>
+	<script type='text/javascript' src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=true"></script>
+	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
+		
+	<title>My nearest...</title>
+</head>
+
+<body onload="initialize()">
+
+	<header>
+		<button id="btnMain"></button>
+		<span id="appName">My nearest <span id="placeNameTitle"></span></span>	 
+		<ul id="install-add">
+			<li><button id="btnInstall">Install</button></li>
+			<li><button id="btnAdd"></button></li>
+		</ul>
+	</header>
+   
+	<section id="mainMap"></section>
+	<section id="errors"></section>	
+   
+	<section id="information">
+		<span id="byLine"><span id="placeName"></span></span>
+		<br>
+		<span id="byLine"><span id="placeAddress"></span> (<span id="duration"></span>)</span>	
+	</section>
+
+   <footer>
+      <ul>
+        <li><button id="0">Drink</button></li>
+        <li><button id="1">Film</button></li>
+        <li><button id="2">Eat</button></li>
+      </ul>
+   </footer>
+
+</body>
+</html>

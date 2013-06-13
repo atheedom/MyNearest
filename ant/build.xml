@@ -1,0 +1,106 @@
+<project name="AppBuilder" default="deploy" basedir="..">
+        <property file="ant/build.properties"/>
+		
+		<path id="classpath">
+			<fileset dir="${lib.dir}" />
+			<fileset dir="${server.location}/${server.name}/${lib.dir}" includes="servlet-api.jar"/>
+		</path>
+
+		
+		<target name="clean">
+			<echo>Cleaning the ${build.dir} and ${server.location}/${server.name}/${server.webapp}/${project.name}</echo>
+			<delete dir="${build.dir}"/>
+			<delete dir="${server.location}/${server.name}/${server.webapp}/${project.name}"/>
+		</target>
+
+		
+		<target name="init" depends="clean">
+			<echo>Creating the build directory</echo>
+			<mkdir dir="${build.dir}/WEB-INF/classes"/>
+			<mkdir dir="${build.dir}/WEB-INF/lib"/>
+			<mkdir dir="${server.location}/${server.name}/${server.webapp}/${project.name}" />
+		</target>
+
+		
+		<target name="compile" depends="init">
+			<echo>Compile the source files</echo>
+			<javac srcdir="${src.dir}" destdir="${build.dir}/WEB-INF/classes">
+					<classpath refid="classpath"/>
+			</javac>
+		</target>
+
+		
+		<target name="copy" depends="compile">
+			<copy todir="${build.dir}/WEB-INF">
+                <fileset dir="${conf.dir}"/>
+			</copy>
+			<copy todir="${build.dir}">
+                <fileset dir="${web.content}"/>
+			</copy>
+			<copy todir="${build.dir}/WEB-INF/lib">
+                <fileset dir="${lib.dir}"/>
+			</copy>
+		</target>
+		
+		
+		<target name="war" depends="copy">
+			<echo>Building the war file</echo>
+			<war destfile="${dist.dir}/${project.name}.war" webxml="${build.dir}/WEB-INF/web.xml">
+				<fileset dir="${build.dir}"/>
+			</war>
+		</target>		
+		
+
+		<path id="tomcat.class.path">
+			<fileset dir="${server.location}/${server.name}/lib">
+				<include name="**/*.jar"/>
+				<include name="**/*.zip"/>
+			</fileset>
+			<pathelement location="${server.location}/${server.name}/bin/bootstrap.jar"/>
+			<pathelement location="${server.location}/${server.name}/bin/tomcat-juli.jar"/>
+		</path>
+
+		<target name="deploy" depends="war">
+			<sequential>
+				<antcall target="tomcat-stop"/>
+					<echo>Deploy to server</echo>
+					<copy todir="${server.location}/${server.name}/${server.webapp}/${project.name}">
+						<fileset dir="${build.dir}"/>
+					</copy>
+				<antcall target="tomcat-start"/>
+			</sequential>
+		</target>
+		
+		
+		<!--target name="deploy" depends="war">
+			<echo>Deploy to server</echo>
+			<copy todir="${server.location}/${server.name}/${server.webapp}/${project.name}">
+				<fileset dir="${build.dir}"/>
+			</copy>
+		</target-->
+
+		<target name="tomcat-start">
+			<echo>Stop Tomcat</echo>
+			<java classname="org.apache.catalina.startup.Bootstrap" fork="true" 
+				classpathref="tomcat.class.path">
+				<jvmarg value="-Dcatalina.home=${server.location}/${server.name}"/>
+			</java>
+		</target>
+
+		<target name="tomcat-stop" depends="tomcat-check-status" if="tomcat.started">
+			<echo>Start Tomcat</echo>
+			<java classname="org.apache.catalina.startup.Bootstrap" fork="true" 
+				classpathref="tomcat.class.path">
+				<jvmarg value="-Dcatalina.home=${server.location}/${server.name}"/>
+				<arg line="stop"/>
+			</java>
+			<sleep seconds="5"/>
+		</target>
+
+		<target name="tomcat-check-status">
+			<condition property="tomcat.started">
+				<socket server="localhost" port="8000"/>
+			</condition>
+		</target>
+
+		</project>

@@ -1,0 +1,24 @@
+{
+  "version": "0.0.01",
+  "name": "MyNearest...",
+  "description": "What is my nearest... well this app will tell you!",
+  "launch_path": "/MyNearest/",
+  "icons": {
+    "16": "/applogos/logo16.png",
+    "32": "/applogos/logo32.png",
+    "48": "/applogos/logo48.png",
+    "64": "/applogos/logo64.png",
+    "128": "/applogos/logo128.png"
+  },
+  "developer": {
+    "name": "Alex Theedom",
+    "url": "http://www.alextheedom.com/"
+  },
+  "installs_allowed_from": ["*"],
+  "default_locale": "en",
+  "permissions": {
+	"geolocation": {
+		"description": "Obtain the current location of the user."
+		}
+	}
+}
